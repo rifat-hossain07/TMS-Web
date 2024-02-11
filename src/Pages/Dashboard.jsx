@@ -1,10 +1,20 @@
 import { Link } from "react-router-dom";
-import useAuth from "../Hooks/useAuth";
 import Header from "../Components/Shared/Header";
 import Button from "../Components/Shared/Button";
+import TasksSection from "../Components/TasksSection";
+import axios from "axios";
+import { useQuery } from "@tanstack/react-query";
+import useAuth from "../Hooks/useAuth";
 const Dashboard = () => {
   const { user } = useAuth();
-
+  const { data: taskData, refetch } = useQuery({
+    queryKey: ["TasksData"],
+    queryFn: async () => {
+      const res = await axios.get(`http://localhost:5000/tasks/${user?.email}`);
+      return res.data;
+    },
+  });
+  console.log(taskData);
   return (
     <div>
       <div>
@@ -39,6 +49,63 @@ const Dashboard = () => {
             <Button text="Add New Task" />
           </Link>
         </div>
+        {taskData?.length === 0 ? (
+          <div className="text-red-400 text-center mt-16 font-bold text-2xl">
+            <p>No Task Available !</p>
+          </div>
+        ) : (
+          <div className="flex flex-col md:flex-row justify-center  gap-5 m-5 ">
+            {/* To-Do */}
+            <div className="md:w-1/3">
+              <h2 className="card-title rounded-t-xl bg-blue-300 text-black p-2">
+                To-Do List:
+              </h2>
+              <div className="min-h-screen bg-red-100 rounded-b-xl p-2">
+                {taskData
+                  ?.filter((task) => task.status === "To-Do")
+                  .map((task, index) => (
+                    <TasksSection
+                      key={task._id}
+                      task={task}
+                      index={index}
+                      refetch={refetch}
+                    />
+                  ))}
+              </div>
+            </div>
+            {/* On-Going */}
+            <div className="md:w-1/3">
+              <h2 className="card-title rounded-t-xl bg-blue-300 text-black p-2">
+                On-Going List:
+              </h2>
+              <div className="min-h-screen bg-yellow-100 rounded-b-xl p-2 ">
+                {taskData
+                  ?.filter((task) => task.status === "On-Going")
+                  .map((task, index) => (
+                    <TasksSection
+                      key={task._id}
+                      task={task}
+                      index={index}
+                      refetch={refetch}
+                    />
+                  ))}
+              </div>
+            </div>
+            {/* Completed */}
+            <div className="md:w-1/3">
+              <h2 className="card-title rounded-t-xl bg-blue-300 text-black p-2">
+                Completed List:
+              </h2>
+              <div className="min-h-screen bg-green-100 rounded-b-xl p-2">
+                {taskData
+                  ?.filter((task) => task.status === "Completed")
+                  .map((task, index) => (
+                    <TasksSection key={task._id} task={task} index={index} />
+                  ))}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
