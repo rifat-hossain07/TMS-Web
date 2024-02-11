@@ -1,12 +1,15 @@
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Button from "../Components/Shared/Button";
 import useAuth from "../Hooks/useAuth";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const AddTask = () => {
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, reset } = useForm();
+  const navigate = useNavigate();
   const { user } = useAuth();
-  const handleAddTask = (data) => {
+  const handleAddTask = async (data) => {
     const email = user?.email;
     const title = data.title;
     const description = data.description;
@@ -14,9 +17,14 @@ const AddTask = () => {
     const priority = data.priority;
     const status = data.status;
     const tasks = { title, description, deadline, priority, status, email };
-    console.log(tasks);
+    const res = await axios.post("http://localhost:5000/addTask", tasks);
+    if (res.data.insertedId) {
+      toast(`Your task added successfully !
+      Deadline for this task is: ${deadline}`);
+      reset();
+      navigate("/dashboard");
+    }
   };
-
   return (
     <div>
       <div className=" flex  justify-center">
