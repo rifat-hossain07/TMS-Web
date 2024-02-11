@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 const Banner = () => {
   return (
     <div
@@ -23,9 +25,12 @@ const Banner = () => {
             Our intuitive platform streamlines task management, empowering you
             to achieve more in less time. Simplify your workflow today!
           </p>
-          <a className="btn btn-outline text-black hover:bg-blue-300 hover:text-black ">
+          <Link
+            className="btn btn-outline text-black hover:bg-blue-300 hover:text-black "
+            to="/dashboard"
+          >
             Let{"'"}s Explore
-          </a>
+          </Link>
         </div>
       </div>
     </div>

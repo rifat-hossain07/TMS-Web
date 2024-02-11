@@ -26,6 +26,16 @@ const Navbar = () => {
       </li>
       {user ? (
         <>
+          <li>
+            <NavLink
+              to="/dashboard"
+              className={({ isActive }) =>
+                isActive ? " bg-blue-300 text-black" : ""
+              }
+            >
+              Dashboard
+            </NavLink>
+          </li>
           <li className="hidden lg:flex">
             <p>{user?.displayName}</p>
           </li>
@@ -103,7 +113,7 @@ const Navbar = () => {
             </ul>
           </div>
           <Link to="/" className="btn btn-ghost text-xl">
-            RHR-TMS
+            TMS
           </Link>
         </div>
         {user && (
