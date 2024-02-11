@@ -4,7 +4,7 @@ import Navbar from "./Components/Shared/Navbar";
 function App() {
   return (
     <>
-      <div>
+      <div className="bg-blue-100">
         <Navbar />
         <Outlet />
       </div>
