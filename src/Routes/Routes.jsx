@@ -8,11 +8,13 @@ import Dashboard from "../Pages/Dashboard";
 import AddTask from "../Pages/AddTask";
 import About from "../Pages/About";
 import Contact from "../Pages/Contact";
+import Error from "../Pages/Error";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
+    errorElement: <Error />,
     children: [
       {
         path: "/",
