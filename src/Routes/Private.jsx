@@ -2,7 +2,7 @@
 import { useContext } from "react";
 import { Navigate, useLocation } from "react-router-dom";
 import { context } from "../Components/ContextProvider/Provider";
-
+// Private route to check if user is login or not
 const Private = ({ children }) => {
   const { user, loading } = useContext(context);
   const location = useLocation();

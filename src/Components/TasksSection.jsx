@@ -5,11 +5,14 @@ import Modal from "react-modal";
 import { toast } from "react-toastify";
 import Button from "./Shared/Button";
 import { Draggable } from "react-beautiful-dnd";
+import Loading from "./Shared/Loading";
 /* eslint-disable react/prop-types */
 const TasksSection = ({ task, index, refetch }) => {
   const { register, handleSubmit } = useForm();
   const [modalIsOpen, setIsOpen] = useState(false);
   const [modal2IsOpen, set2IsOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  // custom style for both Modal
   const customStyles = {
     content: {
       content: "center",
@@ -47,6 +50,7 @@ const TasksSection = ({ task, index, refetch }) => {
     const priority = data.priority;
     const status = data.status;
     const tasks = { title, description, deadline, priority, status };
+    setLoading(true);
     const res = await axios.put(
       `http://localhost:5000/tasks/update/${task?._id}`,
       tasks
@@ -56,63 +60,82 @@ const TasksSection = ({ task, index, refetch }) => {
       New Deadline for this task is: ${deadline}`);
       refetch();
       setIsOpen(false);
+      setLoading(false);
     }
   };
   // function to delete any task after confirmation
   const deleteTask = async (id) => {
+    setLoading(true);
     const res = await axios.delete(`http://localhost:5000/delete/${id}`);
     if (res.data.deletedCount > 0) {
       toast("Your task has been deleted!");
       refetch();
+      setLoading(false);
     }
   };
   return (
     <>
-      <Draggable key={task._id} draggableId={task._id} index={index}>
-        {(provided) => (
-          <div
-            ref={provided.innerRef}
-            {...provided.draggableProps}
-            {...provided.dragHandleProps}
-          >
-            <div className=" card bg-base-100 shadow-xl mb-2">
-              <div className="card-body">
-                <p>
-                  <span className="font-bold">Title: </span> {task?.title}
-                </p>
-                <p>{task?.description}</p>
-                {task?.status === "Completed" ? (
-                  <p className="text-center font-semibold text-green-400">
-                    Completed !
+      {loading ? (
+        // functional loading component
+        <Loading />
+      ) : (
+        <Draggable key={task._id} draggableId={task._id} index={index}>
+          {(provided) => (
+            <div
+              ref={provided.innerRef}
+              {...provided.draggableProps}
+              {...provided.dragHandleProps}
+            >
+              <div className=" card bg-base-100 shadow-xl mb-2">
+                <div className="card-body">
+                  <p>
+                    <span className="font-bold">Title: </span> {task?.title}
                   </p>
-                ) : (
-                  <>
-                    <div className="card-actions justify-between">
-                      <div>
-                        <span className="font-bold">Deadline: </span>
-                        {task?.deadline}
+                  <p>{task?.description}</p>
+                  {task?.status === "Completed" ? (
+                    <p className="text-center font-semibold text-green-400">
+                      Completed !
+                    </p>
+                  ) : (
+                    <>
+                      <div className="card-actions justify-between">
+                        <div>
+                          <span className="font-bold">Deadline: </span>
+                          {task?.deadline}
+                        </div>
+                        <div>
+                          <span className="font-bold">Priority: </span>
+                          <span
+                            className={
+                              task?.priority === "Low"
+                                ? "text-green-400"
+                                : task?.priority === "Medium"
+                                ? "text-yellow-400"
+                                : task?.priority === "High"
+                                ? "text-red-400"
+                                : ""
+                            }
+                          >
+                            {task?.priority}{" "}
+                          </span>
+                        </div>
                       </div>
-                      <div>
-                        <span className="font-bold">Priority: </span>
-                        {task?.priority}
+                      <div className="card-actions justify-between mt-3">
+                        <button onClick={openModal}>
+                          <Button text="Edit" />
+                        </button>
+                        <button onClick={open2Modal}>
+                          <Button text="Delete" />
+                        </button>
                       </div>
-                    </div>
-                    <div className="card-actions justify-between mt-3">
-                      <button onClick={openModal}>
-                        <Button text="Edit" />
-                      </button>
-                      <button onClick={open2Modal}>
-                        <Button text="Delete" />
-                      </button>
-                    </div>
-                  </>
-                )}
+                    </>
+                  )}
+                </div>
               </div>
             </div>
-          </div>
-        )}
-      </Draggable>
-
+          )}
+        </Draggable>
+      )}
       {/* Modal for Update task*/}
       <Modal
         isOpen={modalIsOpen}
@@ -148,6 +171,7 @@ const TasksSection = ({ task, index, refetch }) => {
               </label>
               <input
                 type="text"
+                required
                 defaultValue={task?.title}
                 placeholder="Task Title..."
                 className="input input-bordered"
@@ -162,6 +186,7 @@ const TasksSection = ({ task, index, refetch }) => {
               </label>
               <textarea
                 type="text"
+                required
                 defaultValue={task.description}
                 placeholder="description"
                 className="textarea textarea-bordered md:textarea-lg w-full "
@@ -176,6 +201,7 @@ const TasksSection = ({ task, index, refetch }) => {
                 </label>
                 <input
                   type="date"
+                  required
                   defaultValue={task?.deadline}
                   placeholder="password"
                   className="input input-bordered"
@@ -188,12 +214,13 @@ const TasksSection = ({ task, index, refetch }) => {
                   <span className="label-text">Select tasks Priority</span>
                 </label>
                 <select
+                  required
                   defaultValue={task?.priority}
                   className="select select-bordered w-full "
                   {...register("priority")}
                 >
                   <option>Low</option>
-                  <option>Moderate</option>
+                  <option>Medium</option>
                   <option>High</option>
                 </select>
               </div>
@@ -204,6 +231,7 @@ const TasksSection = ({ task, index, refetch }) => {
                 <span className="label-text">Select tasks Status</span>
               </label>
               <select
+                required
                 defaultValue={task?.status}
                 className="select select-bordered w-full "
                 {...register("status")}

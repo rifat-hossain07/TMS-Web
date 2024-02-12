@@ -8,6 +8,7 @@ const Contact = () => {
   return (
     <div>
       <div data-aos="fade-up" data-aos-duration="1000">
+        {/* using functional component to show header */}
         <Header text="Contact Us" />
       </div>
       <div className="hero md:min-h-screen">
@@ -55,6 +56,7 @@ const Contact = () => {
                       className="textarea textarea-bordered textarea-lg w-full max-w-lg "
                     ></textarea>
                   </div>
+                  {/* using functional component to show Button */}
                   <div
                     onClick={() =>
                       toast("Your Message was sent successfully !")
@@ -73,6 +75,7 @@ const Contact = () => {
                 Office Address :
               </h1>
             </div>
+            {/* using react icon below */}
             <div data-aos="fade-up" data-aos-duration="2000">
               <div className="py-6 flex gap-3">
                 <span className="pt-2">

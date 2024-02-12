@@ -4,9 +4,9 @@ import Benifits from "../Components/Shared/Benifits";
 const Home = () => {
   return (
     <div>
-      {/* Banner */}
+      {/* functional component Banner to show banner */}
       <Banner />
-      {/* Benefits and Uses */}
+      {/* functional component to show Benefits and Uses */}
       <Benifits />
     </div>
   );

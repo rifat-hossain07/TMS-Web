@@ -9,7 +9,7 @@ import { toast } from "react-toastify";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 const Dashboard = () => {
   const { user } = useAuth();
-  // fetch data using tanstack query and axios
+  // fetch data using tanstack query and axios to get the task data
   const { data: taskData, refetch } = useQuery({
     queryKey: ["TasksData"],
     queryFn: async () => {
@@ -21,7 +21,7 @@ const Dashboard = () => {
   const sortTasksByPriority = (tasks) => {
     const priorityValues = {
       High: 3,
-      Moderate: 2,
+      Medium: 2,
       Low: 1,
     };
     if (tasks) {
@@ -56,7 +56,7 @@ const Dashboard = () => {
   return (
     <div>
       <div>
-        {/* Header part */}
+        {/* Header part using functional component to show header*/}
         <div data-aos="fade-down" data-aos-duration="1000">
           <Header text={`Welcome ${user?.displayName}`} />
         </div>
@@ -94,7 +94,7 @@ const Dashboard = () => {
             <span className="text-center  underline">Total Tasks:</span>{" "}
             {taskData?.length}
           </h1>
-          {/* Add Task button */}
+          {/* Add Task button with functional component button to show button*/}
           <Link to="/addTask">
             <Button text="Add New Task" />
           </Link>
@@ -106,12 +106,14 @@ const Dashboard = () => {
           </div>
         ) : (
           <div className="flex flex-col md:flex-row justify-center  gap-5 m-5 ">
+            {/* Drag and Drop Context to implement react beautiful dnd */}
             <DragDropContext onDragEnd={onDragEnd}>
               {/* To-Do */}
               <div className="md:w-1/3">
                 <h2 className="card-title rounded-t-xl bg-blue-300 text-black p-2">
                   To-Do List:
                 </h2>
+                {/* droppable part */}
                 <Droppable droppableId="To-Do">
                   {(provided) => (
                     <div
@@ -139,6 +141,7 @@ const Dashboard = () => {
                 <h2 className="card-title rounded-t-xl bg-blue-300 text-black p-2">
                   On-Going List:
                 </h2>
+                {/* droppable part */}
                 <Droppable droppableId="On-Going">
                   {(provided) => (
                     <div
@@ -166,6 +169,7 @@ const Dashboard = () => {
                 <h2 className="card-title rounded-t-xl bg-blue-300 text-black p-2">
                   Completed List:
                 </h2>
+                {/* droppable part */}
                 <Droppable droppableId="Completed">
                   {(provided) => (
                     <div

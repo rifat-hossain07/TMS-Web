@@ -12,6 +12,7 @@ const Login = () => {
   const [logInerror, setLogInError] = useState("");
   const location = useLocation();
   const navigate = useNavigate();
+  // function to Login user using firebase
   const handleLogin = async (data) => {
     const email = data.email;
     const password = data.password;
@@ -24,7 +25,7 @@ const Login = () => {
       })
       .catch((err) => setLogInError(err.code));
   };
-
+  // function to login via google using firebase
   const handleGoogleLog = () => {
     setLogInError("");
     googleLogIn()
@@ -68,11 +69,13 @@ const Login = () => {
                   className="input input-bordered"
                   required
                 />
+                {/* showing log in error if have */}
                 {logInerror && (
                   <p className="text-red-600 font-semibold">{logInerror}</p>
                 )}
                 <label className="label">
                   New Here? please
+                  {/* sending user to register page if not registered yet */}
                   <Link to="/register">
                     <span className=" text-blue-600 link link-hover ">
                       Register Here
@@ -86,6 +89,7 @@ const Login = () => {
                 </button>
               </div>
             </form>
+            {/* react icon used below */}
             <button
               onClick={handleGoogleLog}
               className=" mb-2 mx-2 btn btn-outline normal-case  border-none  hover:bg-slate-400 hover:text-black"

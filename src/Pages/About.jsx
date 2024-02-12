@@ -5,6 +5,7 @@ const About = () => {
     <div>
       {/* About Us */}
       <div>
+        {/* Using functional Component to show header on page */}
         <div data-aos="fade-up" data-aos-duration="1000">
           <Header text="About Us" />
         </div>

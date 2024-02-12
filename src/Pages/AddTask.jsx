@@ -9,6 +9,7 @@ const AddTask = () => {
   const { register, handleSubmit, reset } = useForm();
   const navigate = useNavigate();
   const { user } = useAuth();
+  // function to handle add task
   const handleAddTask = async (data) => {
     const email = user?.email;
     const title = data.title;
@@ -17,6 +18,7 @@ const AddTask = () => {
     const priority = data.priority;
     const status = data.status;
     const tasks = { title, description, deadline, priority, status, email };
+    // api to send data to database for adding task
     const res = await axios.post("http://localhost:5000/addTask", tasks);
     if (res.data.insertedId) {
       toast(`Your task added successfully !
@@ -34,7 +36,7 @@ const AddTask = () => {
               Add your Task Here!
             </h1>
           </div>
-          <div className=" card border-2 border-blue-300 text-black shadow-xl mx-2 md:mx-5">
+          <div className=" card  border-2 border-blue-300 text-black shadow-xl mx-2 md:mx-5">
             <form onSubmit={handleSubmit(handleAddTask)} className="card-body">
               {/* Title */}
               <div className="form-control">
@@ -45,6 +47,7 @@ const AddTask = () => {
                   type="text"
                   placeholder="Task Title..."
                   className="input input-bordered"
+                  required
                   {...register("title")}
                 />
               </div>
@@ -62,20 +65,20 @@ const AddTask = () => {
                   {...register("description")}
                 />
               </div>
-              {/* Deadlines */}
-              <div className="form-control  ">
-                <label className="label">
-                  <span className="label-text">Deadline</span>
-                </label>
-                <input
-                  type="date"
-                  placeholder="password"
-                  required
-                  className="input input-bordered"
-                  {...register("deadline")}
-                />
-              </div>
               <div className="flex flex-col md:flex-row md:gap-8">
+                {/* Deadlines */}
+                <div className="form-control lg:w-1/2 ">
+                  <label className="label">
+                    <span className="label-text">Deadline</span>
+                  </label>
+                  <input
+                    type="date"
+                    placeholder="password"
+                    required
+                    className="input input-bordered"
+                    {...register("deadline")}
+                  />
+                </div>
                 {/* Priority */}
                 <div className="form-control lg:w-1/2">
                   <label className="label">
@@ -88,25 +91,26 @@ const AddTask = () => {
                   >
                     <option></option>
                     <option>Low</option>
-                    <option>Moderate</option>
+                    <option>Medium</option>
                     <option>High</option>
                   </select>
                 </div>
-                {/* Status */}
-                <div className="form-control lg:w-1/2">
-                  <label className="label">
-                    <span className="label-text">Select tasks Status</span>
-                  </label>
-                  <select
-                    className="select select-blue-300 w-full "
-                    {...register("status")}
-                  >
-                    <option>To-Do</option>
-                    <option>On-Going</option>
-                    <option>Completed</option>
-                  </select>
-                </div>
               </div>
+              {/* Status */}
+              <div className="form-control ">
+                <label className="label">
+                  <span className="label-text">Select tasks Status</span>
+                </label>
+                <select
+                  className="select select-blue-300 w-full "
+                  {...register("status")}
+                >
+                  <option>To-Do</option>
+                  <option>On-Going</option>
+                  <option>Completed</option>
+                </select>
+              </div>
+              {/* using functional component to show button */}
               <div className="form-control mt-6 text-center flex-row justify-evenly">
                 <button>
                   <Button text="add" />

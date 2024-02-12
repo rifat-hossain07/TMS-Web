@@ -29,6 +29,7 @@ const Banner = () => {
             Our intuitive platform streamlines task management, empowering you
             to achieve more in less time. Simplify your workflow today!
           </p>
+          {/* Clickable button will take user to their dashboard */}
           <Link
             className="btn btn-outline text-black hover:bg-blue-300 hover:text-black "
             to="/dashboard"

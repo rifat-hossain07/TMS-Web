@@ -6,8 +6,8 @@ import { updateProfile } from "firebase/auth";
 import useAuth from "../Hooks/useAuth";
 import axios from "axios";
 import { toast } from "react-toastify";
+// secured hosting key from imgbb
 const image_hosting_key = import.meta.env.VITE_IMAGE_HOSTING_KEY;
-// console.log(image_hosting_key);
 const image_hosting_api = `https://api.imgbb.com/1/upload?key=${image_hosting_key}`;
 const Register = () => {
   const { register, handleSubmit, reset } = useForm();
@@ -15,12 +15,12 @@ const Register = () => {
   const [registerError, setRegisterError] = useState("");
   const location = useLocation();
   const navigate = useNavigate();
+  // function to register user using firebase
   const onSubmit = async (data) => {
+    // setting error to empty before attempting register
     setRegisterError("");
-    // host photo
+    // host photo on imgbb
     const photoFile = { image: data.photo[0] };
-    // console.log(photoFile);
-
     const email = data.email;
     const password = data.password;
     const Name = data.name;
@@ -32,6 +32,7 @@ const Register = () => {
       );
       return;
     }
+    // api  to host image on imgbb
     const res = await axios.post(image_hosting_api, photoFile, {
       headers: {
         "content-type": "multipart/form-data",
@@ -40,6 +41,7 @@ const Register = () => {
     const photo = res.data.data.display_url;
     createUser(email, password)
       .then((result) => {
+        // updating users profile on firebase
         updateProfile(result?.user, {
           displayName: Name,
           photoURL: photo,
@@ -52,7 +54,7 @@ const Register = () => {
       .catch((error) => setRegisterError(error.code));
     reset();
   };
-
+  // function to handle register with google using firebase
   const handleGoogleReg = () => {
     setRegisterError("");
     googleLogIn()
@@ -125,25 +127,26 @@ const Register = () => {
                   {...register("password", { required: true })}
                 />
               </div>
-
+              {/* showing register error if have error */}
               {registerError && (
                 <p className="text-red-600 font-semibold">{registerError}</p>
               )}
               <label className="label">
                 Already Have an account ?
+                {/* sending user to login page if he is already registered */}
                 <Link to="/login">
                   <span className=" text-blue-600 link link-hover mx-1">
                     Login Here..
                   </span>
                 </Link>
               </label>
-              {/* <input type="submit" /> */}
               <div className="form-control mt-6 text-center">
                 <button className="btn btn-outline hover:bg-blue-300 hover:text-black normal-case ">
                   Register
                 </button>
               </div>
             </form>
+            {/* react icon used below */}
             <button
               onClick={handleGoogleReg}
               className=" mb-2 mx-2 btn btn-outline normal-case text-[#29465B] border-none  hover:bg-slate-400 hover:text-black"

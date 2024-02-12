@@ -1,13 +1,10 @@
 import { Link } from "react-router-dom";
-
+import logo from "/logo.svg";
 const Footer = () => {
   return (
     <div>
-      <footer
-        data-aos="fade-down"
-        data-aos-duration="1000"
-        className="footer footer-center p-10  text-base-content rounded"
-      >
+      <footer className="footer gap-6 footer-center p-10  text-base-content rounded">
+        <img className="w-12 " src={logo} alt="" />
         <nav className="grid md:grid-flow-col gap-4">
           <Link to="/" className="link link-hover">
             Home
@@ -20,11 +17,7 @@ const Footer = () => {
           </Link>
         </nav>
         <nav>
-          <div
-            data-aos="fade-up"
-            data-aos-duration="1000"
-            className="grid grid-flow-col gap-4"
-          >
+          <div className="grid grid-flow-col gap-4">
             <a href="https://twitter.com/">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
