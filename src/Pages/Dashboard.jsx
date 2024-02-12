@@ -9,6 +9,7 @@ import { toast } from "react-toastify";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 const Dashboard = () => {
   const { user } = useAuth();
+  // fetch data using tanstack query and axios
   const { data: taskData, refetch } = useQuery({
     queryKey: ["TasksData"],
     queryFn: async () => {
@@ -16,7 +17,6 @@ const Dashboard = () => {
       return res.data;
     },
   });
-  console.log(taskData);
   // function to sort tasks based on priority
   const sortTasksByPriority = (tasks) => {
     const priorityValues = {
@@ -57,11 +57,15 @@ const Dashboard = () => {
     <div>
       <div>
         {/* Header part */}
-        <div>
+        <div data-aos="fade-down" data-aos-duration="1000">
           <Header text={`Welcome ${user?.displayName}`} />
         </div>
         {/* Users Card */}
-        <div className="flex flex-col lg:flex-row-reverse items-center text-center lg:text-left justify-center mx-auto w-1/2 rounded-xl bg-blue-200 p-4 text-black shadow-lg ">
+        <div
+          data-aos="flip-left"
+          data-aos-duration="1000"
+          className="flex flex-col lg:flex-row-reverse items-center text-center lg:text-left justify-center mx-auto w-1/2 rounded-xl bg-blue-200 p-4 text-black shadow-lg "
+        >
           <div className="mx-5">
             <img
               className="w-40 bg-slate-300 shadow-lg shadow-blue-200 mx-auto rounded-xl"
@@ -81,7 +85,11 @@ const Dashboard = () => {
           </div>
         </div>
         {/* Total Task Count*/}
-        <div className="flex flex-col md:flex-row justify-center items-center gap-5 md:my-5">
+        <div
+          data-aos="fade-down"
+          data-aos-duration="1000"
+          className="flex flex-col md:flex-row justify-center items-center gap-5 md:my-5"
+        >
           <h1 className="text-xl md:text-2xl font-bold mt-5 my-0 md:my-5">
             <span className="text-center  underline">Total Tasks:</span>{" "}
             {taskData?.length}

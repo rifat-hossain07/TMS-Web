@@ -3,6 +3,7 @@ import { Link, NavLink } from "react-router-dom";
 import { useContext } from "react";
 import { toast } from "react-toastify";
 import { context } from "../ContextProvider/Provider";
+import logo from "/logo.svg";
 
 const Navbar = () => {
   const { user, logOutUser } = useContext(context);
@@ -22,6 +23,26 @@ const Navbar = () => {
           }
         >
           Home
+        </NavLink>
+      </li>
+      <li>
+        <NavLink
+          to="/about"
+          className={({ isActive }) =>
+            isActive ? " bg-blue-300 text-black" : ""
+          }
+        >
+          About Us
+        </NavLink>
+      </li>
+      <li>
+        <NavLink
+          to="/contact"
+          className={({ isActive }) =>
+            isActive ? " bg-blue-300 text-black" : ""
+          }
+        >
+          Contact Us
         </NavLink>
       </li>
       {user ? (
@@ -113,6 +134,7 @@ const Navbar = () => {
             </ul>
           </div>
           <Link to="/" className="btn btn-ghost text-xl">
+            <img className="w-8 h-8" src={logo} alt="" />
             TMS
           </Link>
         </div>
@@ -125,8 +147,8 @@ const Navbar = () => {
           </div>
         )}
 
-        <div className="navbar-end hidden lg:flex">
-          <ul className="menu menu-horizontal px-1">{links}</ul>
+        <div className="navbar-end w-full hidden lg:flex">
+          <ul className="menu menu-horizontal space-x-2">{links}</ul>
         </div>
       </div>
     </div>

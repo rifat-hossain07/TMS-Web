@@ -6,6 +6,8 @@ import Register from "../Pages/Register";
 import Private from "./Private";
 import Dashboard from "../Pages/Dashboard";
 import AddTask from "../Pages/AddTask";
+import About from "../Pages/About";
+import Contact from "../Pages/Contact";
 
 const router = createBrowserRouter([
   {
@@ -15,6 +17,14 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: <Home />,
+      },
+      {
+        path: "/about",
+        element: <About />,
+      },
+      {
+        path: "/contact",
+        element: <Contact />,
       },
       {
         path: "/login",

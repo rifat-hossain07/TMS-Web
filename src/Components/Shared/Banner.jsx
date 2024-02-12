@@ -16,7 +16,11 @@ const Banner = () => {
             className=" md:max-w-xs lg:max-w-lg rounded-lg bg-transparent"
           />
         </div>
-        <div className="w-full  md:w-1/2 text-center md:text-left">
+        <div
+          data-aos="fade-down"
+          data-aos-duration="1000"
+          className="w-full  md:w-1/2 text-center md:text-left"
+        >
           <h1 className="text-2xl lg:text-5xl font-bold ">
             Manage Your Tasks!
           </h1>
