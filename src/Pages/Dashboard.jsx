@@ -7,8 +7,10 @@ import { useQuery } from "@tanstack/react-query";
 import useAuth from "../Hooks/useAuth";
 import { toast } from "react-toastify";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
+import { useState } from "react";
 const Dashboard = () => {
   const { user } = useAuth();
+  const [sortValue, setSortValue] = useState("");
   // fetch data using tanstack query and axios to get the task data
   const { data: taskData, refetch } = useQuery({
     queryKey: ["TasksData"],
@@ -22,9 +24,9 @@ const Dashboard = () => {
   // function to sort tasks based on priority
   const sortTasksByPriority = (tasks) => {
     const priorityValues = {
-      High: 3,
+      High: sortValue === "low to high" ? 1 : 3,
       Medium: 2,
-      Low: 1,
+      Low: sortValue === "low to high" ? 3 : 1,
     };
     if (tasks) {
       return tasks.sort((a, b) => {
@@ -54,6 +56,10 @@ const Dashboard = () => {
         refetch();
       }
     }
+  };
+  // function to handle sort order based on priority
+  const handleSortOrder = (e) => {
+    setSortValue(e.target.value);
   };
   return (
     <div>
@@ -87,19 +93,27 @@ const Dashboard = () => {
           </div>
         </div>
         {/* Total Task Count*/}
-        <div
-          data-aos="fade-down"
-          data-aos-duration="1000"
-          className="flex flex-col md:flex-row justify-center items-center gap-5 md:my-5"
-        >
-          <h1 className="text-xl md:text-2xl font-bold mt-5 my-0 md:my-5">
+        <div data-aos="fade-down" data-aos-duration="1000">
+          <h1 className="text-xl md:text-2xl font-bold mt-5 my-5 text-center">
             <span className="text-center  underline">Total Tasks:</span>{" "}
             {taskData?.length}
           </h1>
-          {/* Add Task button with functional component button to show button*/}
-          <Link to="/addTask">
-            <Button text="Add New Task" />
-          </Link>
+          <div className="flex flex-col md:flex-row justify-center items-center gap-5 md:my-5">
+            {/* Add Task button with functional component button to show button*/}
+            <Link to="/addTask">
+              <Button text="Add New Task" />
+            </Link>
+            <div>
+              <select
+                onChange={handleSortOrder}
+                className="select  select-sm lg:select-md select-blue-300 w-full "
+              >
+                <option value="">Select to Sort</option>
+                <option value="low to high">Low to High</option>
+                <option value="high to low">High to Low</option>
+              </select>
+            </div>
+          </div>
         </div>
         {/* Tasks */}
         {taskData?.length === 0 ? (
