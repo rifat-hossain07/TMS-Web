@@ -14,7 +14,6 @@ const Dashboard = () => {
       return res.data;
     },
   });
-  console.log(taskData);
   return (
     <div>
       <div>
