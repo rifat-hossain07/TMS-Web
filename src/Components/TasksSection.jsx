@@ -8,6 +8,7 @@ import Button from "./Shared/Button";
 const TasksSection = ({ task, refetch }) => {
   const { register, handleSubmit } = useForm();
   const [modalIsOpen, setIsOpen] = useState(false);
+  const [modal2IsOpen, set2IsOpen] = useState(false);
   const customStyles = {
     content: {
       content: "center",
@@ -21,12 +22,23 @@ const TasksSection = ({ task, refetch }) => {
       transform: "translate(-50%, -50%)",
     },
   };
+  // to open update modal
   function openModal() {
     setIsOpen(true);
   }
+  // to close update modal
   function closeModal() {
     setIsOpen(false);
   }
+  // to open delete confirmation modal
+  function open2Modal() {
+    set2IsOpen(true);
+  }
+  // to close delete confirmation modal
+  function close2Modal() {
+    set2IsOpen(false);
+  }
+  // function to update any task
   const updateTask = async (data) => {
     const title = data.title;
     const description = data.description;
@@ -43,6 +55,14 @@ const TasksSection = ({ task, refetch }) => {
       New Deadline for this task is: ${deadline}`);
       refetch();
       setIsOpen(false);
+    }
+  };
+  // function to delete any task after confirmation
+  const deleteTask = async (id) => {
+    const res = await axios.delete(`http://localhost:5000/delete/${id}`);
+    if (res.data.deletedCount > 0) {
+      toast("Your task has been deleted!");
+      refetch();
     }
   };
   return (
@@ -74,7 +94,9 @@ const TasksSection = ({ task, refetch }) => {
                   <button onClick={openModal} className="btn btn-outline">
                     Edit
                   </button>
-                  <button className="btn btn-outline">Delete</button>
+                  <button onClick={open2Modal} className="btn btn-outline">
+                    Delete
+                  </button>
                 </div>
               </>
             )}
@@ -172,6 +194,35 @@ const TasksSection = ({ task, refetch }) => {
               </button>
             </div>
           </form>
+        </div>
+      </Modal>
+      {/* Modal 2 for delete confirmation */}
+      <Modal
+        isOpen={modal2IsOpen}
+        //   onAfterOpen={afterOpenModal}
+        onRequestClose={close2Modal}
+        style={customStyles}
+        contentLabel=" Modal"
+      >
+        <div className="mt-24  text-center">
+          <p className="text-2xl font-bold">
+            Are you sure you want to delete this task?
+          </p>
+          <p className="text-lg font-medium">Task title: {task?.title}</p>
+          <p className="text-red-500 text-xl font-semibold">
+            You will not be able to revert this!
+          </p>
+          <div className="form-control mt-6 text-center flex-row justify-center gap-14">
+            <button
+              className=" rounded-lg"
+              onClick={() => deleteTask(task?._id)}
+            >
+              <Button text="Yes! Delete it" />
+            </button>
+            <button onClick={close2Modal}>
+              <Button text="Cancel" />
+            </button>
+          </div>
         </div>
       </Modal>
     </>
