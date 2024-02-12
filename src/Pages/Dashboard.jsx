@@ -14,12 +14,27 @@ const Dashboard = () => {
       return res.data;
     },
   });
+  // function to sort tasks based on priority
+  const sortTasksByPriority = (tasks) => {
+    const priorityValues = {
+      High: 3,
+      Moderate: 2,
+      Low: 1,
+    };
+    return tasks.sort((a, b) => {
+      const priorityA = priorityValues[a.priority];
+      const priorityB = priorityValues[b.priority];
+      return priorityB - priorityA;
+    });
+  };
   return (
     <div>
       <div>
+        {/* Header part */}
         <div>
           <Header text={`Welcome ${user?.displayName}`} />
         </div>
+        {/* Users Card */}
         <div className="flex flex-col lg:flex-row-reverse items-center text-center lg:text-left justify-center mx-auto w-1/2 rounded-xl bg-blue-200 p-4 text-black shadow-lg ">
           <div className="mx-5">
             <img
@@ -39,15 +54,18 @@ const Dashboard = () => {
             </h2>
           </div>
         </div>
-        {/* Tasks */}
-        <div className="text-center">
-          <h1 className="text-center text-2xl md:text-3xl font-bold my-5 underline">
-            Tasks:
+        {/* Total Task Count*/}
+        <div className="flex flex-col md:flex-row justify-center items-center gap-5 md:my-5">
+          <h1 className="text-xl md:text-2xl font-bold mt-5 my-0 md:my-5">
+            <span className="text-center  underline">Total Tasks:</span>{" "}
+            {taskData?.length}
           </h1>
+          {/* Add Task button */}
           <Link to="/addTask">
             <Button text="Add New Task" />
           </Link>
         </div>
+        {/* Tasks */}
         {taskData?.length === 0 ? (
           <div className="text-red-400 text-center mt-16 font-bold text-2xl">
             <p>No Task Available !</p>
@@ -60,16 +78,16 @@ const Dashboard = () => {
                 To-Do List:
               </h2>
               <div className="min-h-screen bg-red-100 rounded-b-xl p-2">
-                {taskData
-                  ?.filter((task) => task.status === "To-Do")
-                  .map((task, index) => (
-                    <TasksSection
-                      key={task._id}
-                      task={task}
-                      index={index}
-                      refetch={refetch}
-                    />
-                  ))}
+                {sortTasksByPriority(
+                  taskData?.filter((task) => task.status === "To-Do")
+                ).map((task, index) => (
+                  <TasksSection
+                    key={task._id}
+                    task={task}
+                    index={index}
+                    refetch={refetch}
+                  />
+                ))}
               </div>
             </div>
             {/* On-Going */}
@@ -78,16 +96,16 @@ const Dashboard = () => {
                 On-Going List:
               </h2>
               <div className="min-h-screen bg-yellow-100 rounded-b-xl p-2 ">
-                {taskData
-                  ?.filter((task) => task.status === "On-Going")
-                  .map((task, index) => (
-                    <TasksSection
-                      key={task._id}
-                      task={task}
-                      index={index}
-                      refetch={refetch}
-                    />
-                  ))}
+                {sortTasksByPriority(
+                  taskData?.filter((task) => task.status === "On-Going")
+                ).map((task, index) => (
+                  <TasksSection
+                    key={task._id}
+                    task={task}
+                    index={index}
+                    refetch={refetch}
+                  />
+                ))}
               </div>
             </div>
             {/* Completed */}
