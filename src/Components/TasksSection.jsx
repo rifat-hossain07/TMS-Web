@@ -4,8 +4,9 @@ import { useForm } from "react-hook-form";
 import Modal from "react-modal";
 import { toast } from "react-toastify";
 import Button from "./Shared/Button";
+import { Draggable } from "react-beautiful-dnd";
 /* eslint-disable react/prop-types */
-const TasksSection = ({ task, refetch }) => {
+const TasksSection = ({ task, index, refetch }) => {
   const { register, handleSubmit } = useForm();
   const [modalIsOpen, setIsOpen] = useState(false);
   const [modal2IsOpen, set2IsOpen] = useState(false);
@@ -67,42 +68,51 @@ const TasksSection = ({ task, refetch }) => {
   };
   return (
     <>
-      <div>
-        <div className=" card bg-base-100 shadow-xl mb-2">
-          <div className="card-body">
-            <p>
-              <span className="font-bold">Title: </span> {task?.title}
-            </p>
-            <p>{task?.description}</p>
-            {task?.status === "Completed" ? (
-              <p className="text-center font-semibold text-green-400">
-                Completed !
-              </p>
-            ) : (
-              <>
-                <div className="card-actions justify-between">
-                  <div>
-                    <span className="font-bold">Deadline: </span>
-                    {task?.deadline}
-                  </div>
-                  <div>
-                    <span className="font-bold">Priority: </span>
-                    {task?.priority}
-                  </div>
-                </div>
-                <div className="card-actions justify-between mt-3">
-                  <button onClick={openModal}>
-                    <Button text="Edit" />
-                  </button>
-                  <button onClick={open2Modal}>
-                    <Button text="Delete" />
-                  </button>
-                </div>
-              </>
-            )}
+      <Draggable key={task._id} draggableId={task._id} index={index}>
+        {(provided) => (
+          <div
+            ref={provided.innerRef}
+            {...provided.draggableProps}
+            {...provided.dragHandleProps}
+          >
+            <div className=" card bg-base-100 shadow-xl mb-2">
+              <div className="card-body">
+                <p>
+                  <span className="font-bold">Title: </span> {task?.title}
+                </p>
+                <p>{task?.description}</p>
+                {task?.status === "Completed" ? (
+                  <p className="text-center font-semibold text-green-400">
+                    Completed !
+                  </p>
+                ) : (
+                  <>
+                    <div className="card-actions justify-between">
+                      <div>
+                        <span className="font-bold">Deadline: </span>
+                        {task?.deadline}
+                      </div>
+                      <div>
+                        <span className="font-bold">Priority: </span>
+                        {task?.priority}
+                      </div>
+                    </div>
+                    <div className="card-actions justify-between mt-3">
+                      <button onClick={openModal}>
+                        <Button text="Edit" />
+                      </button>
+                      <button onClick={open2Modal}>
+                        <Button text="Delete" />
+                      </button>
+                    </div>
+                  </>
+                )}
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
+        )}
+      </Draggable>
+
       {/* Modal for Update task*/}
       <Modal
         isOpen={modalIsOpen}

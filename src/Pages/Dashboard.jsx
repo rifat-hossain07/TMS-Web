@@ -5,6 +5,8 @@ import TasksSection from "../Components/TasksSection";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import useAuth from "../Hooks/useAuth";
+import { toast } from "react-toastify";
+import { DragDropContext, Droppable } from "react-beautiful-dnd";
 const Dashboard = () => {
   const { user } = useAuth();
   const { data: taskData, refetch } = useQuery({
@@ -14,6 +16,7 @@ const Dashboard = () => {
       return res.data;
     },
   });
+  console.log(taskData);
   // function to sort tasks based on priority
   const sortTasksByPriority = (tasks) => {
     const priorityValues = {
@@ -21,11 +24,34 @@ const Dashboard = () => {
       Moderate: 2,
       Low: 1,
     };
-    return tasks.sort((a, b) => {
-      const priorityA = priorityValues[a.priority];
-      const priorityB = priorityValues[b.priority];
-      return priorityB - priorityA;
-    });
+    if (tasks) {
+      return tasks.sort((a, b) => {
+        const priorityA = priorityValues[a.priority];
+        const priorityB = priorityValues[b.priority];
+        return priorityB - priorityA;
+      });
+    } else return [];
+  };
+  // function to handle Drag end
+  const onDragEnd = async (result) => {
+    const { source, destination, draggableId } = result;
+
+    // Dropping outside any list
+    if (!destination) return;
+
+    if (source.droppableId !== destination.droppableId) {
+      // Send API request to update the task status in the database
+      const status = { status: destination.droppableId };
+      const res = await axios.put(
+        `http://localhost:5000/tasks/${draggableId}`,
+        status
+      );
+      if (res.data.modifiedCount > 0) {
+        toast(`Successfully! updated your task to 
+        ${status.status}`);
+        refetch();
+      }
+    }
   };
   return (
     <div>
@@ -72,55 +98,88 @@ const Dashboard = () => {
           </div>
         ) : (
           <div className="flex flex-col md:flex-row justify-center  gap-5 m-5 ">
-            {/* To-Do */}
-            <div className="md:w-1/3">
-              <h2 className="card-title rounded-t-xl bg-blue-300 text-black p-2">
-                To-Do List:
-              </h2>
-              <div className="min-h-screen bg-red-100 rounded-b-xl p-2">
-                {sortTasksByPriority(
-                  taskData?.filter((task) => task.status === "To-Do")
-                ).map((task, index) => (
-                  <TasksSection
-                    key={task._id}
-                    task={task}
-                    index={index}
-                    refetch={refetch}
-                  />
-                ))}
+            <DragDropContext onDragEnd={onDragEnd}>
+              {/* To-Do */}
+              <div className="md:w-1/3">
+                <h2 className="card-title rounded-t-xl bg-blue-300 text-black p-2">
+                  To-Do List:
+                </h2>
+                <Droppable droppableId="To-Do">
+                  {(provided) => (
+                    <div
+                      ref={provided.innerRef}
+                      {...provided.droppableProps}
+                      className="min-h-screen bg-red-100 rounded-b-xl p-2"
+                    >
+                      {sortTasksByPriority(
+                        taskData?.filter((task) => task.status === "To-Do")
+                      ).map((task, index) => (
+                        <TasksSection
+                          key={task._id}
+                          task={task}
+                          index={index}
+                          refetch={refetch}
+                        />
+                      ))}
+                      {provided.placeholder}
+                    </div>
+                  )}
+                </Droppable>
               </div>
-            </div>
-            {/* On-Going */}
-            <div className="md:w-1/3">
-              <h2 className="card-title rounded-t-xl bg-blue-300 text-black p-2">
-                On-Going List:
-              </h2>
-              <div className="min-h-screen bg-yellow-100 rounded-b-xl p-2 ">
-                {sortTasksByPriority(
-                  taskData?.filter((task) => task.status === "On-Going")
-                ).map((task, index) => (
-                  <TasksSection
-                    key={task._id}
-                    task={task}
-                    index={index}
-                    refetch={refetch}
-                  />
-                ))}
+              {/* On-Going */}
+              <div className="md:w-1/3">
+                <h2 className="card-title rounded-t-xl bg-blue-300 text-black p-2">
+                  On-Going List:
+                </h2>
+                <Droppable droppableId="On-Going">
+                  {(provided) => (
+                    <div
+                      ref={provided.innerRef}
+                      {...provided.droppableProps}
+                      className="min-h-screen bg-yellow-100 rounded-b-xl p-2 "
+                    >
+                      {sortTasksByPriority(
+                        taskData?.filter((task) => task.status === "On-Going")
+                      ).map((task, index) => (
+                        <TasksSection
+                          key={task._id}
+                          task={task}
+                          index={index}
+                          refetch={refetch}
+                        />
+                      ))}
+                      {provided.placeholder}
+                    </div>
+                  )}
+                </Droppable>
               </div>
-            </div>
-            {/* Completed */}
-            <div className="md:w-1/3">
-              <h2 className="card-title rounded-t-xl bg-blue-300 text-black p-2">
-                Completed List:
-              </h2>
-              <div className="min-h-screen bg-green-100 rounded-b-xl p-2">
-                {taskData
-                  ?.filter((task) => task.status === "Completed")
-                  .map((task, index) => (
-                    <TasksSection key={task._id} task={task} index={index} />
-                  ))}
+              {/* Completed */}
+              <div className="md:w-1/3">
+                <h2 className="card-title rounded-t-xl bg-blue-300 text-black p-2">
+                  Completed List:
+                </h2>
+                <Droppable droppableId="Completed">
+                  {(provided) => (
+                    <div
+                      ref={provided.innerRef}
+                      {...provided.droppableProps}
+                      className="min-h-screen bg-green-100 rounded-b-xl p-2"
+                    >
+                      {taskData
+                        ?.filter((task) => task.status === "Completed")
+                        .map((task, index) => (
+                          <TasksSection
+                            key={task._id}
+                            task={task}
+                            index={index}
+                          />
+                        ))}
+                      {provided.placeholder}
+                    </div>
+                  )}
+                </Droppable>
               </div>
-            </div>
+            </DragDropContext>
           </div>
         )}
       </div>
