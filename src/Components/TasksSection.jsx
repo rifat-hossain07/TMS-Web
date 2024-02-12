@@ -52,7 +52,7 @@ const TasksSection = ({ task, index, refetch }) => {
     const tasks = { title, description, deadline, priority, status };
     setLoading(true);
     const res = await axios.put(
-      `http://localhost:5000/tasks/update/${task?._id}`,
+      `https://tms-backend-tau.vercel.app/tasks/update/${task?._id}`,
       tasks
     );
     if (res.data) {
@@ -66,7 +66,9 @@ const TasksSection = ({ task, index, refetch }) => {
   // function to delete any task after confirmation
   const deleteTask = async (id) => {
     setLoading(true);
-    const res = await axios.delete(`http://localhost:5000/delete/${id}`);
+    const res = await axios.delete(
+      `https://tms-backend-tau.vercel.app/delete/${id}`
+    );
     if (res.data.deletedCount > 0) {
       toast("Your task has been deleted!");
       refetch();

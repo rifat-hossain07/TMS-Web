@@ -19,7 +19,10 @@ const AddTask = () => {
     const status = data.status;
     const tasks = { title, description, deadline, priority, status, email };
     // api to send data to database for adding task
-    const res = await axios.post("http://localhost:5000/addTask", tasks);
+    const res = await axios.post(
+      "https://tms-backend-tau.vercel.app/addTask",
+      tasks
+    );
     if (res.data.insertedId) {
       toast(`Your task added successfully !
       Deadline for this task is: ${deadline}`);

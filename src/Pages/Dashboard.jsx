@@ -13,7 +13,9 @@ const Dashboard = () => {
   const { data: taskData, refetch } = useQuery({
     queryKey: ["TasksData"],
     queryFn: async () => {
-      const res = await axios.get(`http://localhost:5000/tasks/${user?.email}`);
+      const res = await axios.get(
+        `https://tms-backend-tau.vercel.app/tasks/${user?.email}`
+      );
       return res.data;
     },
   });
@@ -43,7 +45,7 @@ const Dashboard = () => {
       // Send API request to update the task status in the database
       const status = { status: destination.droppableId };
       const res = await axios.put(
-        `http://localhost:5000/tasks/${draggableId}`,
+        `https://tms-backend-tau.vercel.app/tasks/${draggableId}`,
         status
       );
       if (res.data.modifiedCount > 0) {
